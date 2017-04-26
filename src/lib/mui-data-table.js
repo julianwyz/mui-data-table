@@ -1,5 +1,13 @@
 import React from 'react';
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn, TableFooter } from 'material-ui/Table';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+  TableFooter,
+} from 'material-ui/Table';
 
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -12,20 +20,20 @@ import NavigateRight from 'material-ui/svg-icons/image/navigate-next';
 import NavigateLeft from 'material-ui/svg-icons/image/navigate-before';
 
 import injectProp from '../utils/injectProp';
-import { hasHtml, extractHtml } from '../utils/handleHtmlProp';
-import { hasCustomRender, callCustomRender } from '../utils/handleCustomRender';
+import {hasHtml, extractHtml} from '../utils/handleHtmlProp';
+import {hasCustomRender, callCustomRender} from '../utils/handleCustomRender';
 import arraySearch from '../utils/search.js';
 import Paginate from '../utils/paginate';
 
 const iconStyleFilter = {
   color: '#757575',
   cursor: 'pointer',
-  transform: 'translateY(5px) translateX(-20px)'
+  transform: 'translateY(5px) translateX(-20px)',
 };
 
 const searchHeaderColumnStyle = {
   position: 'relative',
-  textAlign: 'right'
+  textAlign: 'right',
 };
 
 const searchStyle = {
@@ -40,7 +48,7 @@ const searchStyle = {
   marginLeft: -22,
   padding: '7px 12px',
   textIndent: 3,
-  cursor: 'text'
+  cursor: 'text',
 };
 
 const iconStyleSearch = {
@@ -48,20 +56,24 @@ const iconStyleSearch = {
   position: 'absolute',
   top: '30%',
   opacity: 0,
-  marginLeft: -76
+  marginLeft: -76,
 };
 
 const navigationStyle = {
-  cursor: 'pointer'
+  cursor: 'pointer',
 };
 
 export default class MuiDataTable extends React.Component {
   constructor(props) {
     super();
     let tableData = props.config.data || [];
-    let rowsPerPage = props.config.paginated.constructor === Object ? props.config.paginated.rowsPerPage : 5;
+    let rowsPerPage = props.config.paginated.constructor === Object
+      ? props.config.paginated.rowsPerPage
+      : 5;
 
-    tableData = props.config.paginated ? new Paginate(tableData).perPage(rowsPerPage) : tableData;
+    tableData = props.config.paginated
+      ? new Paginate(tableData).perPage(rowsPerPage)
+      : tableData;
 
     if (tableData instanceof Paginate) {
       tableData = tableData.page(1);
@@ -77,7 +89,7 @@ export default class MuiDataTable extends React.Component {
       searchData: [],
       isSearching: false,
       navigationStyle,
-      iconStyleSearch
+      iconStyleSearch,
     };
 
     this.columns = injectProp(props.config.columns);
@@ -99,7 +111,7 @@ export default class MuiDataTable extends React.Component {
 
     this.setState({
       tableData: data.perPage(val).page(paginationInfo.currentPage),
-      perPageSelection: val
+      perPageSelection: val,
     });
   }
 
@@ -115,7 +127,7 @@ export default class MuiDataTable extends React.Component {
         currentlyShowing: '0 - 0 of 0',
         isLastPage: true,
         totalNumOfPages: 0,
-        total: 0
+        total: 0,
       };
     }
 
@@ -138,7 +150,9 @@ export default class MuiDataTable extends React.Component {
     }
 
     this.setState({
-      tableData: data.perPage(paginationInfo.perPage).page(paginationInfo.nextPage)
+      tableData: data
+        .perPage(paginationInfo.perPage)
+        .page(paginationInfo.nextPage),
     });
   }
 
@@ -154,7 +168,9 @@ export default class MuiDataTable extends React.Component {
     }
 
     this.setState({
-      tableData: data.perPage(paginationInfo.perPage).page(paginationInfo.previousPage)
+      tableData: data
+        .perPage(paginationInfo.perPage)
+        .page(paginationInfo.previousPage),
     });
   }
 
@@ -163,7 +179,6 @@ export default class MuiDataTable extends React.Component {
       <TableHeaderColumn key={index}>{item.title}</TableHeaderColumn>
     ));
   }
-
 
   mapDataToProperties(properties, obj) {
     return properties.map((prop, index) => (
@@ -192,18 +207,22 @@ export default class MuiDataTable extends React.Component {
 
   shouldShowItem(item) {
     const styleObj = {
-      display: (item ? '' : 'none')
+      display: item ? '' : 'none',
     };
 
     return styleObj;
   }
 
   shouldShowMenu(defaultStyle) {
-    if (this.props.config.paginated && this.props.config.paginated.constructor === Boolean) return defaultStyle;
+    if (
+      this.props.config.paginated &&
+      this.props.config.paginated.constructor === Boolean
+    )
+      return defaultStyle;
 
     const menuOptions = this.props.config.paginated.menuOptions;
 
-    return menuOptions ? defaultStyle : { display: 'none' };
+    return menuOptions ? defaultStyle : {display: 'none'};
   }
 
   toggleOpacity(val) {
@@ -223,7 +242,7 @@ export default class MuiDataTable extends React.Component {
     this.setState({
       style,
       iconStyleSearch: searchIconStyle,
-      disabled: disabledState
+      disabled: disabledState,
     });
   }
 
@@ -235,12 +254,12 @@ export default class MuiDataTable extends React.Component {
 
     let res = arraySearch(key, word, data);
 
-    this.setState({ searchData: res });
+    this.setState({searchData: res});
 
     if (word.length > 0) {
-      this.setState({ isSearching: true });
+      this.setState({isSearching: true});
     } else {
-      this.setState({ isSearching: false });
+      this.setState({isSearching: false});
     }
 
     if (this.props.config.paginated) {
@@ -249,7 +268,7 @@ export default class MuiDataTable extends React.Component {
     }
 
     this.setState({
-      tableData: res
+      tableData: res,
     });
   }
 
@@ -283,19 +302,25 @@ export default class MuiDataTable extends React.Component {
   }
 
   handleRowSelection(obj) {
-    if ( obj && obj.constructor === Boolean ) {
+    if (obj && obj.constructor === Boolean) {
       return this.setRowSelection('', obj);
-    } else if ( obj && obj.constructor === Object ) {
+    } else if (obj && obj.constructor === Object) {
       return this.setRowSelection('object', obj);
     } else {
       return;
     }
   }
 
+  handleCellClick = index => {
+    if (this.props.onCellClick) {
+      this.props.onCellClick(this.state.tableData[index]);
+    }
+  };
+
   render() {
     return (
       <Paper zDepth={1}>
-        <Table>
+        <Table onCellClick={this.handleCellClick}>
           <TableHeader>
             <TableRow style={this.shouldShowItem(this.props.config.search)}>
               <TableHeaderColumn
@@ -310,7 +335,10 @@ export default class MuiDataTable extends React.Component {
                   disabled={this.state.disabled}
                   onKeyUp={this.searchData}
                 />
-                <FilterList style={iconStyleFilter} onClick={this.toggleSearch} />
+                <FilterList
+                  style={iconStyleFilter}
+                  onClick={this.toggleSearch}
+                />
               </TableHeaderColumn>
             </TableRow>
 
@@ -326,25 +354,41 @@ export default class MuiDataTable extends React.Component {
           <TableFooter style={this.shouldShowItem(this.props.config.paginated)}>
             <TableRow>
               <TableRowColumn
-                style={{ textAlign: 'right', verticalAlign: 'middle', width: '70%' }}
+                style={{
+                  textAlign: 'right',
+                  verticalAlign: 'middle',
+                  width: '70%',
+                }}
               >
-                <span style={this.shouldShowMenu({ paddingRight: 15 })}>Rows per page:</span>
+                <span style={this.shouldShowMenu({paddingRight: 15})}>
+                  Rows per page:
+                </span>
                 <SelectField
                   value={this.state.perPageSelection}
-                  style={this.shouldShowMenu({ width: 35, fontSize: 13, top: 0 })}
+                  style={this.shouldShowMenu({width: 35, fontSize: 13, top: 0})}
                   onChange={this.handlePerPageChange}
                 >
-                  { this.handleRowSelection(this.props.config.paginated) }
+                  {this.handleRowSelection(this.props.config.paginated)}
                 </SelectField>
               </TableRowColumn>
 
-              <TableRowColumn style={{ textAlign: 'right', verticalAlign: 'middle' }}>
+              <TableRowColumn
+                style={{textAlign: 'right', verticalAlign: 'middle'}}
+              >
                 <span> {this.showPaginationInfo()} </span>
               </TableRowColumn>
 
-              <TableRowColumn style={{ textAlign: 'right', verticalAlign: 'middle' }}>
-                <NavigateLeft onClick={this.navigateLeft} style={this.state.navigationStyle} />
-                <NavigateRight onClick={this.navigateRight} style={this.state.navigationStyle} />
+              <TableRowColumn
+                style={{textAlign: 'right', verticalAlign: 'middle'}}
+              >
+                <NavigateLeft
+                  onClick={this.navigateLeft}
+                  style={this.state.navigationStyle}
+                />
+                <NavigateRight
+                  onClick={this.navigateRight}
+                  style={this.state.navigationStyle}
+                />
               </TableRowColumn>
             </TableRow>
           </TableFooter>
@@ -356,5 +400,5 @@ export default class MuiDataTable extends React.Component {
 }
 
 MuiDataTable.propTypes = {
-  config: React.PropTypes.object.isRequired
+  config: React.PropTypes.object.isRequired,
 };
